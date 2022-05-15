@@ -29,6 +29,8 @@ let 공격중 = false;
 let stack = 0;
 let ultimatePoint = 0;
 
+let MOVING = true;
+
 let HEADING_POINT = right;
 
 const villainOnScreen = [];
@@ -138,7 +140,7 @@ function framework1() {
     attack_A.draw();
     if (timer % 24 === 0 && timer !== 72) {
       stack += 25;
-      /* console.log("48%=0") zzzzz
+      /* console.log("48%=0") zzzzz 
       console.log(attack_A.y, stack); */
     
     } else if (timer % 72 === 0) {
