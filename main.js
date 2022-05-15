@@ -14,13 +14,28 @@ const class_HIDDEN = 'hidden';
 const right = "right";
 const left = "left";
 
-// 이미지 불러오기
+////////// 이미지 불러오기
 const img_villain = new Image();
 img_villain.src = 'src/villain1.png'
 
 const img_actorRight = new Image();
 img_actorRight.src = 'src/actorRight.png'
 
+const img_actorRightMove1 = new Image();
+img_actorRightMove1.src = 'src/actorRightMove1.png'
+
+const img_actorRightMove2 = new Image();
+img_actorRightMove2.src = 'src/actorRightMove2.png'
+
+const img_actorLeft = new Image();
+img_actorLeft.src = 'src/actorLeft.png'
+
+const img_actorLeftMove1 = new Image();
+img_actorLeftMove1.src = 'src/actorLeftMove1.png'
+
+const img_actorLeftMove2 = new Image();
+img_actorLeftMove2.src = 'src/actorLeftMove2.png'
+/////////////////////////////////////////////////////////////////
 ctx.fillStyle = "Brown";
 ctx.fillRect(0, 0.70*CAN_HEI+75, CAN_WID, 0.3*CAN_HEI-75);
 
@@ -30,8 +45,11 @@ let P_Up = false;
 let falling = false;
 let P_Space = false;
 let 공격중 = false;
+let timer = 0;
 let stack = 0;
 let ultimatePoint = 0;
+let imgFrameR = 0;
+let imgFrameL = 0;
 
 let MOVING = false;
 
@@ -47,11 +65,10 @@ const actor = {
   height : 75,
   draw() {
     ctx.fillStyle = "black";
-    ctx.fillRect(this.x, this.y, this.width, this.height);
     if (HEADING_POINT === right && MOVING === false) {
       ctx.drawImage(img_actorRight, this.x, this.y);
     } else if (HEADING_POINT === left && MOVING === false) {
-      //ctx.drawImage();
+      ctx.drawImage(img_actorLeft, this.x, this.y);
     }
   } 
 }
@@ -85,7 +102,7 @@ villainOnScreen.push(villain_R);
 //주인공 공격 히트는 frame 안에다 ..
 
 
-let timer = 0;
+
 //조작키
 function framework1() {
   requestAnimationFrame(framework1);
@@ -104,13 +121,35 @@ function framework1() {
   const ACTOR_XR = actor.x +30;
   const ACTOR_YR = actor.y;
   
-  //좌우 이동
+  //////좌우 이동
   if (P_Left) {
     actor.x -= 2.5;
   } else if (P_Right) {
     actor.x += 2.5;
   }
-  //jump!!
+  if (HEADING_POINT === right && MOVING === true) {
+    imgFrameR ++
+    console.log(imgFrameR);
+    if (imgFrameR <= 30 ) {
+      ctx.drawImage(img_actorRightMove1, actor.x, actor.y);
+    } else if (imgFrameR <= 60) {
+      ctx.drawImage(img_actorRightMove2, actor.x, actor.y);
+    } else if (imgFrameR === 61) {
+      imgFrameR = 0;
+      ctx.drawImage(img_actorRightMove1, actor.x, actor.y);
+    }};
+    if (HEADING_POINT === left && MOVING === true) {
+      imgFrameL ++
+      console.log(imgFrameL);
+      if (imgFrameL <= 30 ) {
+        ctx.drawImage(img_actorLeftMove1, actor.x, actor.y);
+      } else if (imgFrameL <= 60) {
+        ctx.drawImage(img_actorLeftMove2, actor.x, actor.y);
+      } else if (imgFrameL === 61) {
+        imgFrameL = 0;
+        ctx.drawImage(img_actorLeftMove1, actor.x, actor.y);
+      }};
+  ///////////jump!!
   if (P_Up && actor.y >= GROUND-215) {
     actor.y -=5.5;
     //console.log(actor.y)
@@ -208,11 +247,13 @@ document.addEventListener("keydown", function(e){
 document.addEventListener("keydown", function(e){
   if (e.code === "ArrowLeft") {
     P_Left = true;
+    MOVING = true;
     HEADING_POINT = left;
   }
 }); document.addEventListener("keyup", function(e) {
       if (e.code === "ArrowLeft") {
         P_Left = false;
+        MOVING = false;
       }
     })
 
