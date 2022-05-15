@@ -14,8 +14,12 @@ const class_HIDDEN = 'hidden';
 const right = "right";
 const left = "left";
 
+// 이미지 불러오기
 const img_villain = new Image();
 img_villain.src = 'src/villain1.png'
+
+const img_actorRight = new Image();
+img_actorRight.src = 'src/actorRight.png'
 
 ctx.fillStyle = "Brown";
 ctx.fillRect(0, 0.70*CAN_HEI+75, CAN_WID, 0.3*CAN_HEI-75);
@@ -29,7 +33,7 @@ let 공격중 = false;
 let stack = 0;
 let ultimatePoint = 0;
 
-let MOVING = true;
+let MOVING = false;
 
 let HEADING_POINT = right;
 
@@ -44,11 +48,11 @@ const actor = {
   draw() {
     ctx.fillStyle = "black";
     ctx.fillRect(this.x, this.y, this.width, this.height);
-    /* if (HEADING_POINT === right) {
-      ctx.drawImage();
-    } else if (HEADING_POINT === left) {
-      ctx.drawImage();
-    } */
+    if (HEADING_POINT === right && MOVING === false) {
+      ctx.drawImage(img_actorRight, this.x, this.y);
+    } else if (HEADING_POINT === left && MOVING === false) {
+      //ctx.drawImage();
+    }
   } 
 }
 
@@ -191,11 +195,13 @@ document.addEventListener("keydown", function(e){
   if (e.code === "ArrowRight") {
     //console.log("오른쪽 나가아자")
     P_Right = true;
+    MOVING = true;
     HEADING_POINT = right;
   }
 }); document.addEventListener("keyup", function(e) {
       if (e.code === "ArrowRight") {
         P_Right = false;
+        MOVING = false;
       }
     })
 
