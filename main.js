@@ -138,7 +138,7 @@ function framework1() {
     attack_A.draw();
     if (timer % 24 === 0 && timer !== 72) {
       stack += 25;
-      /* console.log("48%=0")
+      /* console.log("48%=0") zzzzz
       console.log(attack_A.y, stack); */
     
     } else if (timer % 72 === 0) {
