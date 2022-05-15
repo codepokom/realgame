@@ -17,7 +17,7 @@ const left = "left";
 ////////// 이미지 불러오기
 const img_villain = new Image();
 img_villain.src = 'src/villain1.png'
-
+//
 const img_actorRight = new Image();
 img_actorRight.src = 'src/actorRight.png'
 
@@ -26,7 +26,7 @@ img_actorRightMove1.src = 'src/actorRightMove1.png'
 
 const img_actorRightMove2 = new Image();
 img_actorRightMove2.src = 'src/actorRightMove2.png'
-
+//
 const img_actorLeft = new Image();
 img_actorLeft.src = 'src/actorLeft.png'
 
@@ -35,6 +35,25 @@ img_actorLeftMove1.src = 'src/actorLeftMove1.png'
 
 const img_actorLeftMove2 = new Image();
 img_actorLeftMove2.src = 'src/actorLeftMove2.png'
+//
+const img_actorAttack1 = new Image();
+img_actorAttack1.src = 'src/actorAttack1.png'
+
+const img_actorAttack2 = new Image();
+img_actorAttack2.src = 'src/actorAttack2.png'
+
+const img_actorAttack3 = new Image();
+img_actorAttack3.src = 'src/actorAttack3.png'
+
+function actorAttack() {
+  if(timer < 24) {
+    return img_actorAttack1;
+  } else if (timer >=24 && timer <48) {
+    return img_actorAttack2;
+  } else if (timer >=48 && timer <=72) {
+    return img_actorAttack3;
+  }
+}
 /////////////////////////////////////////////////////////////////
 ctx.fillStyle = "Brown";
 ctx.fillRect(0, 0.70*CAN_HEI+75, CAN_WID, 0.3*CAN_HEI-75);
@@ -56,6 +75,7 @@ let MOVING = false;
 let HEADING_POINT = right;
 
 const villainOnScreen = [];
+
 
 //주인공 설정 
 const actor = {
@@ -111,7 +131,7 @@ function framework1() {
   actor.draw();
   villainOnScreen.forEach((a, i, o)=> {
     if (a.dead === true) {
-      a.x = null;
+      a.x = -999;
       o.splice(i, 1);
     }
     a.draw();
@@ -167,14 +187,14 @@ function framework1() {
   //공격 변수여서 여기다가..
   if (P_Space) {
     
+
     const attack_A = {
       x : actor.x +actor.width,
       y : actor.y + stack,
       width : actor.width,
       height : actor.height / 3,
       draw() {
-        ctx.fillStyle = "gray"
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+        ctx.drawImage(actorAttack(), this.x, this.y);
       }
     }
 
@@ -200,22 +220,17 @@ function framework1() {
       //console.log("kill him")
     }
   }
-  //엑터 사망판정
+  //////////////////엑터 사망판정
   if ((villain_R.x - actor.width <= actor.x && actor.x <= villain_R.x + actor.width) && (villain_R.y - actor.height <= actor.y && actor.y <= villain_R.y + actor.height)) {
     console.log("game over");
     home.classList.remove(class_HIDDEN)
     canvas.classList.add(class_HIDDEN);
-  }
-  //빌런이동
-  //villain_R.x -= 1.5; 
-
-
+  };
 
 }
 
 function playAgain(e) {
   e.preventDefault();
-  
 }
 
 
