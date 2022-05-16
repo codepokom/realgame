@@ -14,7 +14,7 @@ const class_HIDDEN = 'hidden';
 const right = "right";
 const left = "left";
 
-////////// 이미지 불러오기
+////////// //이미지 불러오기
 const img_villain = new Image();
 img_villain.src = 'src/villain1.png'
 //
