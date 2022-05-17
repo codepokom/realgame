@@ -51,9 +51,6 @@ const img_actorAttack_L2 = new Image();
 img_actorAttack_L2.src = 'src/actorAttack_L2.png'
 const img_actorAttack_L3 = new Image();
 img_actorAttack_L3.src = 'src/actorAttack_L3.png'
-//
-const img_ice = new Image();
-img_ice.src = 'src/what.png'
 
 function actorAttack() {
   if(timer < 18) {
@@ -74,9 +71,8 @@ function actorAttack_L() {
   }
 }
 /////////////////////////////////////////////////////////////////
-ctx.fillStyle = "Skyblue";
+ctx.fillStyle = "Brown";
 ctx.fillRect(0, 0.70*CAN_HEI+75, CAN_WID, 0.3*CAN_HEI-75);
-//ctx.drawImage(img_ice, 0, 0.70*CAN_HEI+75, CAN_WID, 0.3*CAN_HEI-75)
 
 let P_Left = false;
 let P_Right = false;
@@ -152,9 +148,10 @@ class ChargingVillain {
 //주인공 공격 히트는 frame 안에다 ..
 
 
-///------------------------조작키
+
+//조작키
 function framework1() {
-  //requestAnimationFrame(framework1);
+  requestAnimationFrame(framework1);
   // 프레임마다 밑배경 이하를 지우고 그리고 반복 값은 저장됨으로 변경도 저장된 채로 그림이 그려진다.
   ctx.clearRect(0, 0, CAN_WID, 0.7*CAN_HEI+75);
   actor.draw();
@@ -169,42 +166,42 @@ function framework1() {
 
   //////좌우 이동
   if (P_Left) {
-    actor.x -= 1.5;
+    actor.x -= 2.5;
   } else if (P_Right) {
-    actor.x += 1.5;
+    actor.x += 2.5;
   }
   if (HEADING_POINT === right && MOVING === true) {
     imgFrameR ++
     console.log(imgFrameR);
-    if (imgFrameR <= 50 ) {
+    if (imgFrameR <= 30 ) {
       ctx.drawImage(img_actorRightMove1, actor.x, actor.y);
-    } else if (imgFrameR <= 100) {
+    } else if (imgFrameR <= 60) {
       ctx.drawImage(img_actorRightMove2, actor.x, actor.y);
-    } else if (imgFrameR === 101) {
+    } else if (imgFrameR === 61) {
       imgFrameR = 0;
       ctx.drawImage(img_actorRightMove1, actor.x, actor.y);
     }};
     if (HEADING_POINT === left && MOVING === true) {
       imgFrameL ++
       console.log(imgFrameL);
-      if (imgFrameL <= 50 ) {
+      if (imgFrameL <= 30 ) {
         ctx.drawImage(img_actorLeftMove1, actor.x, actor.y);
-      } else if (imgFrameL <= 100) {
+      } else if (imgFrameL <= 60) {
         ctx.drawImage(img_actorLeftMove2, actor.x, actor.y);
-      } else if (imgFrameL === 101) {
+      } else if (imgFrameL === 61) {
         imgFrameL = 0;
         ctx.drawImage(img_actorLeftMove1, actor.x, actor.y);
       }};
   ///////////jump!!
   if (P_Up && actor.y >= GROUND-215) {
-    actor.y -=3.5;
+    actor.y -=5.5;
     //console.log(actor.y)
     //console.log(GROUND-205)
   } else if (P_Up && actor.y < GROUND-215) {
     P_Up = false;
     falling = true;
   } else if (falling) {
-    actor.y +=3.0;
+    actor.y +=5.5;
     if(actor.y > GROUND-80) {
       actor.y = GROUND-75;
       falling = false;
@@ -222,6 +219,7 @@ function framework1() {
           ctx.drawImage(actorAttack(), this.x, this.y);
         }
       }
+    
       const attack_A_L = {
         x : actor.x - actor.width,
         y : actor.y + stack,
@@ -231,6 +229,8 @@ function framework1() {
           ctx.drawImage(actorAttack_L(), this.x, this.y);
         }
       }
+    
+
     timer ++;
     공격중 = true;
     if (HEADING_POINT === right) {
@@ -238,8 +238,12 @@ function framework1() {
     } else if (HEADING_POINT === left) {
       attack_A_L.draw()
     }
+    //attack_A.draw();
     if (timer % 18 === 0 && timer !== 54) {
       stack += 25;
+      /* console.log("48%=0") zzzzz 
+      console.log(attack_A.y, stack); */
+    
     } else if (timer % 54 === 0) {
       P_Space = false;
       공격중 = false;
@@ -249,12 +253,9 @@ function framework1() {
     }
     //console.log(timer)
     //피격 공격안에 있어야하나 dd
-    if (HEADING_POINT === right) {
-      if ((villain_R.x - attack_A.width <= attack_A.x && attack_A.x <= villain_R.x + attack_A.width) && (villain_R.y - attack_A.height <= attack_A.y && attack_A.y <= villain_R.y + villain_R.height)) {
-        villain_R.kill();
+    if ((villain_R.x - attack_A.width <= attack_A.x && attack_A.x <= villain_R.x + attack_A.width) && (villain_R.y - attack_A.height <= attack_A.y && attack_A.y <= villain_R.y + villain_R.height)) {
+      villain_R.kill();
       //console.log("kill him")
-    }} else if (HEADING_POINT === left) {
-      
     }
   }
   //////////////////엑터 사망판정
@@ -263,16 +264,17 @@ function framework1() {
     home.classList.remove(class_HIDDEN)
     canvas.classList.add(class_HIDDEN);
   };
-  //
+
 }
 
 function playAgain(e) {
   e.preventDefault();
 }
 
-//프레임 대신 인터벌로 실행 간격을 줄이니 자연스러워보인다.
-setInterval(framework1, 5)
-//////////////////////////////////////리스너
+
+
+framework1();
+
 
 document.addEventListener("keydown", function(e){
   if (e.code === "Space" && 공격중 ===false) {

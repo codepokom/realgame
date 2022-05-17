@@ -1,20 +1,19 @@
 
-let num = 0;
+//function Alltest() {
+  let i = 0
 
-function test() {
-if (num === 0) {
-  num ++
-  console.log("1")
-  if (num === 1) {
-    num ++
-    console.log(num)
-    num = 10;
+  function test() {
+    
+    console.log(i)
+    i ++;
   }
-}
-}
 
-console.log(num)
 
-test()
 
-console.log(num)
+  //setInterval(test, 1000);
+
+
+//
+
+//Alltest();
+
