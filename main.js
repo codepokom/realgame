@@ -40,20 +40,34 @@ img_actorLeftMove2.src = 'src/actorLeftMove2.png'
 //
 const img_actorAttack1 = new Image();
 img_actorAttack1.src = 'src/actorAttack1.png'
-
 const img_actorAttack2 = new Image();
 img_actorAttack2.src = 'src/actorAttack2.png'
-
 const img_actorAttack3 = new Image();
 img_actorAttack3.src = 'src/actorAttack3.png'
+//
+const img_actorAttack_L1 = new Image();
+img_actorAttack_L1.src = 'src/actorAttack_L1.png'
+const img_actorAttack_L2 = new Image();
+img_actorAttack_L2.src = 'src/actorAttack_L2.png'
+const img_actorAttack_L3 = new Image();
+img_actorAttack_L3.src = 'src/actorAttack_L3.png'
 
 function actorAttack() {
-  if(timer < 24) {
+  if(timer < 18) {
     return img_actorAttack1;
-  } else if (timer >=24 && timer <48) {
+  } else if (timer >=18 && timer <36) {
     return img_actorAttack2;
-  } else if (timer >=48 && timer <=72) {
+  } else if (timer >=36 && timer <=54) {
     return img_actorAttack3;
+  }
+}
+function actorAttack_L() {
+  if(timer < 18) {
+    return img_actorAttack_L1;
+  } else if (timer >= 18 && timer < 36) {
+    return img_actorAttack_L2;
+  } else if (timer >= 36 && timer <= 54) {
+    return img_actorAttack_L3;
   }
 }
 /////////////////////////////////////////////////////////////////
@@ -139,10 +153,7 @@ function framework1() {
     a.draw();
     a.x -= 1.5;
   })
-  //villain_R.draw();
-  const ACTOR_XR = actor.x +30;
-  const ACTOR_YR = actor.y;
-  
+
   //////좌우 이동
   if (P_Left) {
     actor.x -= 2.5;
@@ -189,7 +200,6 @@ function framework1() {
   //공격 변수여서 여기다가..
   if (P_Space) {
     
-    
       const attack_A = {
         x : actor.x +actor.width,
         y : actor.y + stack,
@@ -206,7 +216,7 @@ function framework1() {
         width : actor.width,
         height : actor.height / 3,
         draw() {
-          ctx.drawImage(actorAttack(), this.x, this.y);
+          ctx.drawImage(actorAttack_L(), this.x, this.y);
         }
       }
     
@@ -219,12 +229,12 @@ function framework1() {
       attack_A_L.draw()
     }
     //attack_A.draw();
-    if (timer % 24 === 0 && timer !== 72) {
+    if (timer % 18 === 0 && timer !== 54) {
       stack += 25;
       /* console.log("48%=0") zzzzz 
       console.log(attack_A.y, stack); */
     
-    } else if (timer % 72 === 0) {
+    } else if (timer % 54 === 0) {
       P_Space = false;
       공격중 = false;
       timer = 0;
