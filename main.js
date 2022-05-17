@@ -189,20 +189,36 @@ function framework1() {
   //공격 변수여서 여기다가..
   if (P_Space) {
     
-
-    const attack_A = {
-      x : actor.x +actor.width,
-      y : actor.y + stack,
-      width : actor.width,
-      height : actor.height / 3,
-      draw() {
-        ctx.drawImage(actorAttack(), this.x, this.y);
+    
+      const attack_A = {
+        x : actor.x +actor.width,
+        y : actor.y + stack,
+        width : actor.width,
+        height : actor.height / 3,
+        draw() {
+         ctx.drawImage(actorAttack(), this.x, this.y);
+        }
       }
-    }
+    
+      const attack_A_L = {
+        x : actor.x - actor.width,
+        y : actor.y + stack,
+        width : actor.width,
+        height : actor.height / 3,
+        draw() {
+          ctx.drawImage(actorAttack(), this.x, this.y);
+        }
+      }
+    
 
     timer ++;
     공격중 = true;
-    attack_A.draw();
+    if (HEADING_POINT === right) {
+      attack_A.draw()
+    } else if (HEADING_POINT === left) {
+      attack_A_L.draw()
+    }
+    //attack_A.draw();
     if (timer % 24 === 0 && timer !== 72) {
       stack += 25;
       /* console.log("48%=0") zzzzz 
