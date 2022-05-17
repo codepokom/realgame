@@ -196,7 +196,7 @@ function framework1() {
         width : actor.width,
         height : actor.height / 3,
         draw() {
-         ctx.drawImage(actorAttack(), this.x, this.y);
+          ctx.drawImage(actorAttack(), this.x, this.y);
         }
       }
     
