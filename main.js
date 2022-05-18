@@ -75,7 +75,7 @@ function actorAttack_L() {
 }
 /////////////////////////////////////////////////////////////////
 ctx.fillStyle = "Skyblue";
-ctx.fillRect(0, 0.70*CAN_HEI+75, CAN_WID, 0.3*CAN_HEI-75);
+//아래배경도 인터벌로 넣음.
 //ctx.drawImage(img_ice, 0, 0.70*CAN_HEI+75, CAN_WID, 0.3*CAN_HEI-75)
 
 let P_Left = false;
@@ -104,7 +104,6 @@ const actor = {
   width : 40,
   height : 75,
   draw() {
-    ctx.fillStyle = "black";
     if (HEADING_POINT === right && MOVING === false) {
       ctx.drawImage(img_actorRight, this.x, this.y);
     } else if (HEADING_POINT === left && MOVING === false) {
@@ -115,19 +114,19 @@ const actor = {
 
 //빌런 설정
 class Villain {
-  constructor(name, x, y, width, height, dead) {
+  constructor(name, x, y, MOVINGPOINT) {
     this.name = name;
     this.x = x;
     this.y = y;
-    this.width = width;
-    this.height = height;
+    this.width = 40;
+    this.height = 65;
+    this.MOVINGPOINT = MOVINGPOINT;
     this.dead = false;
   }
   draw(img) {
     ctx.drawImage(img, this.x, this.y-1);
   }
   kill() {
-    ctx.clearRect(this.x, this.y, this.width, this.height)
     this.dead = true;
     if (ultimatePoint <= 100) {
       ultimatePoint += 8;
@@ -136,8 +135,11 @@ class Villain {
     }
   }
 }
-const villain_R = new Villain("villain_R", 0.95*CAN_WID, 0.7*CAN_HEI+10, 40, 65);
+const villain_R = new Villain("villain_R", 0.95*CAN_WID, 0.7*CAN_HEI+10, left);
 villainOnScreen.push(villain_R);
+
+const villain2 = new Villain("villain2", 0.05*CAN_WID, 0.7*CAN_HEI+10, right);
+
 
 class ChargingVillain {
   constructor(x, y) {
@@ -151,12 +153,12 @@ class ChargingVillain {
 
 //주인공 공격 히트는 frame 안에다 ..
 
-
 ///------------------------조작키
 function framework1() {
-  //requestAnimationFrame(framework1);
+  //requestAnimationFrame(framework1); setinterval로 대체하였다.
   // 프레임마다 밑배경 이하를 지우고 그리고 반복 값은 저장됨으로 변경도 저장된 채로 그림이 그려진다.
   ctx.clearRect(0, 0, CAN_WID, 0.7*CAN_HEI+75);
+  ctx.fillRect(0, 0.70*CAN_HEI+75, CAN_WID, 0.3*CAN_HEI-75);
   actor.draw();
   villainOnScreen.forEach((a, i, o)=> {
     if (a.dead === true) {
@@ -164,7 +166,12 @@ function framework1() {
       o.splice(i, 1);
     }
     a.draw(img_villain);
-    a.x -= 1.5;
+    if (a.MOVINGPOINT === left) {
+      a.x -= 1.5;    
+    } else if (a.MOVINGPOINT === right) {
+      a.x += 1.5;
+    }
+    
   })
 
   //////좌우 이동
@@ -175,7 +182,7 @@ function framework1() {
   }
   if (HEADING_POINT === right && MOVING === true) {
     imgFrameR ++
-    console.log(imgFrameR);
+    //console.log(imgFrameR);
     if (imgFrameR <= 50 ) {
       ctx.drawImage(img_actorRightMove1, actor.x, actor.y);
     } else if (imgFrameR <= 100) {
@@ -186,7 +193,7 @@ function framework1() {
     }};
     if (HEADING_POINT === left && MOVING === true) {
       imgFrameL ++
-      console.log(imgFrameL);
+      //console.log(imgFrameL);
       if (imgFrameL <= 50 ) {
         ctx.drawImage(img_actorLeftMove1, actor.x, actor.y);
       } else if (imgFrameL <= 100) {
@@ -195,7 +202,7 @@ function framework1() {
         imgFrameL = 0;
         ctx.drawImage(img_actorLeftMove1, actor.x, actor.y);
       }};
-  ///////////jump!!
+  ///////////------jump!!
   if (P_Up && actor.y >= GROUND-215) {
     actor.y -=3.5;
     //console.log(actor.y)
@@ -320,6 +327,11 @@ document.addEventListener("keydown", function(e) {
     console.log(e)
   }
 })
+console.log(villain_R.dead)
+/* villain_R.dead.addEventListener("change", () => {
+  villainOnScreen.push(villain2);
+}) */
+
 
 btn_again.addEventListener("submit", playAgain)
 
