@@ -89,7 +89,7 @@ let stack = 0;
 let ultimatePoint = 0;
 let imgFrameR = 0;
 let imgFrameL = 0;
-
+let killNum = 0;
 let MOVING = false;
 
 let HEADING_POINT = right;
@@ -133,13 +133,13 @@ class Villain {
     } else if (ultimatePoint > 100) {
       ultimatePoint = 100;
     }
+    killNum = parseInt(killNum) + 1;
   }
 }
 const villain_R = new Villain("villain_R", 0.95*CAN_WID, 0.7*CAN_HEI+10, left);
 villainOnScreen.push(villain_R);
 
 const villain2 = new Villain("villain2", 0.05*CAN_WID, 0.7*CAN_HEI+10, right);
-
 
 class ChargingVillain {
   constructor(x, y) {
@@ -174,7 +174,12 @@ function framework1() {
     
   })
 
-  //////좌우 이동
+  //빌런하나더 생성
+  if (villain_R.dead === true && killNum === 1) {
+    villainOnScreen.push(villain2);
+    killNum += 0.1
+  }
+  //////-------------------좌우 이동
   if (P_Left) {
     actor.x -= 1.5;
   } else if (P_Right) {
@@ -256,21 +261,36 @@ function framework1() {
     }
     //console.log(timer)
     //피격 공격안에 있어야하나 dd
-    if (HEADING_POINT === right) {
-      if ((villain_R.x - attack_A.width <= attack_A.x && attack_A.x <= villain_R.x + attack_A.width) && (villain_R.y - attack_A.height <= attack_A.y && attack_A.y <= villain_R.y + villain_R.height)) {
-        villain_R.kill();
-      //console.log("kill him")
-    }} else if (HEADING_POINT === left) {
-      
-    }
+    villainOnScreen.forEach((a, i, o) => {
+      if (HEADING_POINT === right) {
+        if ((a.x - attack_A.width <= attack_A.x && attack_A.x <= a.x + attack_A.width) && (a.y - attack_A.height <= attack_A.y && attack_A.y <= a.y + a.height)) {
+          a.kill();
+        console.log("kill him")
+      }} else if (HEADING_POINT === left) {
+        if ((a.x <= attack_A_L.x && a.x + a.width >= attack_A_L.x) && (a.y <= attack_A_L.height + attack_A_L.y && attack_A_L.y <= a.y + a.height)) {
+          a.kill();
+        }
+      }
+    })
+    
   }
   //////////////////엑터 사망판정
-  if ((villain_R.x - actor.width <= actor.x && actor.x <= villain_R.x + actor.width) && (villain_R.y - actor.height <= actor.y && actor.y <= villain_R.y + actor.height)) {
+  /* if ((villain_R.x - actor.width <= actor.x && actor.x <= villain_R.x + actor.width) && (villain_R.y - actor.height <= actor.y && actor.y <= villain_R.y + actor.height)) {
     console.log("game over");
     home.classList.remove(class_HIDDEN)
     canvas.classList.add(class_HIDDEN);
-  };
+  }; */
+  //이거로하면 위의것을 일일ㅇ이쓰지않아도 되긴하는데 그냥 리턴하는 방법(return foreach => return a)은 없는건가>?
+  villainOnScreen.forEach((a, i, o) => {
+    if ((a.x - actor.width <= actor.x && actor.x <= a.x + actor.width) && (a.y - actor.height <= actor.y && actor.y <= a.y + actor.height)) {
+      console.log("game over");
+      home.classList.remove(class_HIDDEN)
+      canvas.classList.add(class_HIDDEN);
+    };
+  })
   //
+
+  
 }
 
 function playAgain(e) {
@@ -327,10 +347,7 @@ document.addEventListener("keydown", function(e) {
     console.log(e)
   }
 })
-console.log(villain_R.dead)
-/* villain_R.dead.addEventListener("change", () => {
-  villainOnScreen.push(villain2);
-}) */
+
 
 
 btn_again.addEventListener("submit", playAgain)
