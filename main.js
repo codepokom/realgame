@@ -13,8 +13,8 @@ const GROUND = 0.7*CAN_HEI+75;
 const class_HIDDEN = 'hidden';
 const right = "right";
 const left = "left";
-
-
+const NORMAL = "normal"
+const CHARGE = "charge"
 ////////////이미지 불러오기
 
 const img_villain = new Image();
@@ -114,8 +114,8 @@ const actor = {
 
 //빌런 설정
 class Villain {
-  constructor(name, x, y, MOVINGPOINT) {
-    this.name = name;
+  constructor(type, x, y, MOVINGPOINT) {
+    this.type = type;
     this.x = x;
     this.y = y;
     this.width = 40;
@@ -136,21 +136,36 @@ class Villain {
     killNum = parseInt(killNum) + 1;
   }
 }
-const villain_R = new Villain("villain_R", 0.95*CAN_WID, 0.7*CAN_HEI+10, left);
+const villain_R = new Villain(NORMAL, 0.95*CAN_WID, 0.7*CAN_HEI+10, left);
 villainOnScreen.push(villain_R);
 
-const villain2 = new Villain("villain2", 0.05*CAN_WID, 0.7*CAN_HEI+10, right);
+const villain2 = new Villain(NORMAL, 0.05*CAN_WID, 0.7*CAN_HEI+10, right);
 
 class ChargingVillain {
-  constructor(x, y) {
+  constructor(x, y, MOVINGPOINT) {
+    this.type = "charge"
     this.x = x;
     this.y = y;
     this.width = 70;
     this.height = 70;
     this.dead = false;
+    this.MOVINGPOINT = MOVINGPOINT;
+  }
+  draw(img) {
+    ctx.fillRect(this.x, this.y, 70, 70);
+  }
+  kill() {
+    this.dead = true;
+    killNum = parseInt(killNum) + 1;
+    if (ultimatePoint < 100) {
+      ultimatePoint += 20;
+    } else if (ultimatePoint >= 100) {
+      ultimatePoint = 100;
+    }
   }
 }
 
+const c_villain1 = new ChargingVillain(0.85*CAN_WID, 0.7*CAN_HEI+70, left);
 //주인공 공격 히트는 frame 안에다 ..
 
 ///------------------------조작키
@@ -166,11 +181,20 @@ function framework1() {
       o.splice(i, 1);
     }
     a.draw(img_villain);
-    if (a.MOVINGPOINT === left) {
-      a.x -= 1.5;    
-    } else if (a.MOVINGPOINT === right) {
-      a.x += 1.5;
+    if (a.type === NORMAL) {
+      if (a.MOVINGPOINT === left) {
+        a.x -= 1.5;    
+      } else if (a.MOVINGPOINT === right) {
+        a.x += 1.5;
+      }
+    } else if (a.type === CHARGE) {
+      if (a.MOVINGPOINT === left) {
+        a.x -= 1.5;
+      } else if (a.MOVINGPOINT === right) {
+        a.x += 1.5;
+      }
     }
+    
     
   })
 
@@ -178,6 +202,8 @@ function framework1() {
   if (villain_R.dead === true && killNum === 1) {
     villainOnScreen.push(villain2);
     killNum += 0.1
+  } else if (villain2.dead === true && killNum ===2) {
+    villainOnScreen.push(c_villain1);
   }
   //////-------------------좌우 이동
   if (P_Left) {
