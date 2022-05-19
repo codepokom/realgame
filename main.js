@@ -150,8 +150,11 @@ class ChargingVillain {
     this.height = 70;
     this.dead = false;
     this.MOVINGPOINT = MOVINGPOINT;
+    this.turn = false;
+    this.stun = false;
   }
   draw(img) {
+    ctx.fillStyle = "red"
     ctx.fillRect(this.x, this.y, 70, 70);
   }
   kill() {
@@ -165,7 +168,7 @@ class ChargingVillain {
   }
 }
 
-const c_villain1 = new ChargingVillain(0.85*CAN_WID, 0.7*CAN_HEI+70, left);
+const c_villain1 = new ChargingVillain(0.85*CAN_WID, 0.7*CAN_HEI+5, left);
 //주인공 공격 히트는 frame 안에다 ..
 
 ///------------------------조작키
@@ -173,6 +176,7 @@ function framework1() {
   //requestAnimationFrame(framework1); setinterval로 대체하였다.
   // 프레임마다 밑배경 이하를 지우고 그리고 반복 값은 저장됨으로 변경도 저장된 채로 그림이 그려진다.
   ctx.clearRect(0, 0, CAN_WID, 0.7*CAN_HEI+75);
+  ctx.fillStyle = "Skyblue";
   ctx.fillRect(0, 0.70*CAN_HEI+75, CAN_WID, 0.3*CAN_HEI-75);
   actor.draw();
   villainOnScreen.forEach((a, i, o)=> {
@@ -189,9 +193,10 @@ function framework1() {
       }
     } else if (a.type === CHARGE) {
       if (a.MOVINGPOINT === left) {
-        a.x -= 1.5;
+        a.x -= 6;
+        console.log(a.x);
       } else if (a.MOVINGPOINT === right) {
-        a.x += 1.5;
+        a.x += 6;
       }
     }
     
@@ -204,6 +209,8 @@ function framework1() {
     killNum += 0.1
   } else if (villain2.dead === true && killNum ===2) {
     villainOnScreen.push(c_villain1);
+    killNum += 0.1; // 이거 안해주면 빌런 존나생기는듯?
+
   }
   //////-------------------좌우 이동
   if (P_Left) {
@@ -290,16 +297,56 @@ function framework1() {
     villainOnScreen.forEach((a, i, o) => {
       if (HEADING_POINT === right) {
         if ((a.x - attack_A.width <= attack_A.x && attack_A.x <= a.x + attack_A.width) && (a.y - attack_A.height <= attack_A.y && attack_A.y <= a.y + a.height)) {
-          a.kill();
+          if (a.type !== CHARGE) {
+            a.kill();
+          } else if (a.type === CHARGE) {
+            if(a.MOVINGPOINT !== "0") {
+            console.log("Blocked")
+            } else if (a.MOVINGPOINT === "0") {
+              a.kill();
+            }
+          }
         console.log("kill him")
       }} else if (HEADING_POINT === left) {
         if ((a.x <= attack_A_L.x && a.x + a.width >= attack_A_L.x) && (a.y <= attack_A_L.height + attack_A_L.y && attack_A_L.y <= a.y + a.height)) {
-          a.kill();
+          if (a.type !== CHARGE) {
+            a.kill();
+          } else if (a.type === CHARGE) {
+            if(a.MOVINGPOINT !== "0") {
+              console.log("Blocked")
+              } else if (a.MOVINGPOINT === "0") {
+                a.kill();
+              }
+          }
         }
       }
     })
-    
+  
   }
+    ///////공격끝
+    //-차저 방향전환 및 스턴
+    villainOnScreen.forEach((a, i, o) => {
+      if (a.type === CHARGE && a.MOVINGPOINT === left && a.x <= 0 ) {
+        if (a.turn === true) {
+          a.stun = true;
+          a.x = 0;
+          a.MOVINGPOINT = "0";
+        } else if (a.turn === false) {
+          a.turn = true;
+          a.MOVINGPOINT = right;
+        }
+      } else if (a.type === CHARGE && a.MOVINGPOINT === right && a.x >= CAN_WID-70 ) {
+        if (a.turn === true) {
+          a.stun = true;
+          a.x = CAN_WID-70;
+          a.MOVINGPOINT = "0";
+        } else if (a.turn === false) {
+          a.turn = true;
+          a.MOVINGPOINT = left;
+        }
+      }
+      
+    })
   //////////////////엑터 사망판정
   /* if ((villain_R.x - actor.width <= actor.x && actor.x <= villain_R.x + actor.width) && (villain_R.y - actor.height <= actor.y && actor.y <= villain_R.y + actor.height)) {
     console.log("game over");
@@ -330,13 +377,11 @@ setInterval(framework1, 5)
 document.addEventListener("keydown", function(e){
   if (e.code === "Space" && 공격중 ===false) {
     P_Space = true;
-    //console.log("space worked")
   }
 })
 
 document.addEventListener("keydown", function(e){
   if (e.code === "ArrowRight") {
-    //console.log("오른쪽 나가아자")
     P_Right = true;
     MOVING = true;
     HEADING_POINT = right;
