@@ -193,10 +193,10 @@ function framework1() {
       }
     } else if (a.type === CHARGE) {
       if (a.MOVINGPOINT === left) {
-        a.x -= 6;
+        a.x -= 5.3;
         console.log(a.x);
       } else if (a.MOVINGPOINT === right) {
-        a.x += 6;
+        a.x += 5.3;
       }
     }
     
