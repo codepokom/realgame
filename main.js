@@ -203,14 +203,18 @@ function framework1() {
     
   })
 
-  //빌런하나더 생성
+  /////------------빌런  더  생성
   if (villain_R.dead === true && killNum === 1) {
     villainOnScreen.push(villain2);
     killNum += 0.1
-  } else if (villain2.dead === true && killNum ===2) {
+  } else if (villain2.dead === true && killNum ===4) {
     villainOnScreen.push(c_villain1);
     killNum += 0.1; // 이거 안해주면 빌런 존나생기는듯?
-
+  } else if (killNum === 2) {
+    const villain_R2 = new Villain(NORMAL, 0.95*CAN_WID, 0.7*CAN_HEI+10, left);
+    const villain_L2 = new Villain(NORMAL, 0.05*CAN_WID, 0.7*CAN_HEI+10, right);
+    villainOnScreen.push(villain_R2, villain_L2);
+    killNum += 0.1;
   }
   //////-------------------좌우 이동
   if (P_Left) {
@@ -290,7 +294,6 @@ function framework1() {
       공격중 = false;
       timer = 0;
       stack = 0;
-      //console.log(villain_R.x - (attack_A.x+attack_A.width), "wow")
     }
     //console.log(timer)
     //피격 공격안에 있어야하나 dd
