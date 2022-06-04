@@ -75,6 +75,7 @@ function actorAttack_L() {
 }
 /////////////////////////////////////////////////////////////////
 ctx.fillStyle = "Skyblue";
+ctx.font = '24px serif';
 //아래배경도 인터벌로 넣음.
 //ctx.drawImage(img_ice, 0, 0.70*CAN_HEI+75, CAN_WID, 0.3*CAN_HEI-75)
 
@@ -86,6 +87,7 @@ let P_Space = false;
 let 공격중 = false;
 let timer = 0;
 let stack = 0;
+let ulti = false;
 let ultimatePoint = 0;
 let imgFrameR = 0;
 let imgFrameL = 0;
@@ -170,6 +172,8 @@ class ChargingVillain {
 
 const c_villain1 = new ChargingVillain(0.85*CAN_WID, 0.7*CAN_HEI+5, left);
 //주인공 공격 히트는 frame 안에다 ..
+// 실험 콘솔 주함수 밖
+console.log(`Ultimate Point: ${ultimatePoint}`);
 
 ///------------------------조작키
 function framework1() {
@@ -178,6 +182,8 @@ function framework1() {
   ctx.clearRect(0, 0, CAN_WID, 0.7*CAN_HEI+75);
   ctx.fillStyle = "Skyblue";
   ctx.fillRect(0, 0.70*CAN_HEI+75, CAN_WID, 0.3*CAN_HEI-75);
+  //ctx.fillText(`Ultimate Point: ${ultimatePoint}`, 0.1*CAN_WID, 0.9*CAN_HEI);
+  ctx.fillText(`Ultimate Point: ${ultimatePoint}`, 10, 30);
   actor.draw();
   villainOnScreen.forEach((a, i, o)=> {
     if (a.dead === true) {
@@ -327,6 +333,8 @@ function framework1() {
   
   }
     ///////공격끝
+    //=============궁극기
+    
     //-차저 방향전환 및 스턴
     villainOnScreen.forEach((a, i, o) => {
       if (a.type === CHARGE && a.MOVINGPOINT === left && a.x <= 0 ) {
@@ -416,9 +424,9 @@ document.addEventListener("keydown", function(e) {
 })
 
 document.addEventListener("keydown", function(e) {
-  if (e.code === "R") {
+  if (e.code === "KeyR") {
     ultimatePoint = 0;
-    console.log(e)
+    ulti = true;
   }
 })
 
